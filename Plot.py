@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 inputfile = input("Input the data file you want to plot: \n")
+# Input a file including the extension.
 data = np.loadtxt(inputfile, unpack = True)
 # We take the data from data.txt and then we make sure that the data is unpacked. 
 # The returned array is transposed, so that arguments may be unpacked using x, y, z = loadtxt(...). 
@@ -16,7 +17,7 @@ data = np.loadtxt(inputfile, unpack = True)
 fig1 = plt.figure()
 # First we make a figure that can be saved or modified.
 
-choiceoflimits = input("Do you want to manually modify the limits? Press y for yes, press anything else for no")
+choiceoflimits = input("Do you want to manually modify the limits? Press y for yes, press anything else for no \n")
 
 if choiceoflimits == "y":
     choicexlimitleft = input("Choose x limit(leftside): ")
