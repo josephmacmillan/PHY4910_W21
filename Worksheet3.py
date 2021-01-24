@@ -118,4 +118,4 @@ print("\nThe radius of the white dwarf is", x1[-1], "km")
 M1 = 4*np.pi*pc1*(lam1*10**(5))**3 * m1 *10**(-3)
 
 print("\nThe mass of the White Dwarf is", M1, "kg")
-print("\nThis is a worst approximation because of the Chandrasehkar limit.")
+print("\nThis is a worse approximation because of the Chandrasekhar limit.")
