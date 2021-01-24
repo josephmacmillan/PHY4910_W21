@@ -45,6 +45,7 @@ k = 3.166E12
 pc = 4.045E6
 G = 6.6743E-8
 lam = (((n+1) * k * np.power(pc, (1 - n) /n))/(4*np.pi*G))**(1/2)
+lam *= 10**(-5)
 print("\nThis is the radial scale factor", lam, "km")
 
 x *= lam
@@ -57,11 +58,10 @@ plt.show()
 print("\nThe radius of the white dwarf is", x[-1], "km")
 
 # Change rho to fit the units to get kg value
-pc = 4.045E18
-M = 4*np.pi*pc*lam**3 * m 
+M = 4*np.pi*pc*(lam * 10**(5))**3 * m * 10**(-3)
 
 print("\nThe mass of the White Dwarf is", M, "kg")
-print("\nThis is not a good approximation because the Chandrasekhar limit is", 2.7E30, "kg")
+print("\nThis is a decent approximation because the Chandrasekhar limit is", 2.7E30, "kg")
 
 print("\n \n Part B)")
 
@@ -101,8 +101,8 @@ print("\nThe dimensionless mass is", m1)
 #Part 3)
 k1 = 4.936E14
 pc1 = 53.31E6
-G = 6.6743E-8
 lam1 = (((n1+1) * k1 * np.power(pc1, (1 - n1) /n1))/(4*np.pi*G))**(1/2)
+lam1 *= 10**(-5)
 print("\nThis is the radial scale factor", lam1, "km")
 
 x1 *= lam1
@@ -114,8 +114,8 @@ plt.show()
 
 print("\nThe radius of the white dwarf is", x1[-1], "km")
 
-pc1 = 5.331E19
-M1 = 4*np.pi*pc1*lam1**3 * m1 
+
+M1 = 4*np.pi*pc1*(lam1*10**(5))**3 * m1 *10**(-3)
 
 print("\nThe mass of the White Dwarf is", M1, "kg")
-print("\nThis is not a good approximation because the Chandrasekhar limit is", 2.7E30, "kg")
+print("\nThis is a worst approximation because of the Chandrasehkar limit.")
