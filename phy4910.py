@@ -63,7 +63,7 @@ def solveODE(x_start, x_stop, h, y0, z0, f, g, Type = "rk"):
         
         
         
-def plot(x,y, xlabel, ylabel, save = False, name = " plot.pdf"):
+def plot(x,y, xlabel, ylabel, name = " "):
     import matplotlib.pyplot as plt
     
     #plot the arrays
@@ -75,7 +75,7 @@ def plot(x,y, xlabel, ylabel, save = False, name = " plot.pdf"):
     plt.ylabel(ylabel)
     
     #save plot if indicated in arguments
-    if save == True:
+    if name != " ":
         plt.savefig(name)
     #display the plot
     plt.show()
@@ -85,13 +85,25 @@ def plot(x,y, xlabel, ylabel, save = False, name = " plot.pdf"):
  
 
 
-def Nonrel_WhiteDwarf(x_start, x_stop, h, y0, z0, f, g, n, k, G, rho_c, lamb):
+def Nonrel_WhiteDwarf(x_stop, rho_c):
     #import libraries
-    import matplotlibe.pyplot as plt
     import numpy as np
     
+    # define global variables for our constants
+    n = 1.5
+    k = 3.166 * 10**(12)
+    G = 6.6743 * 10**(-8)
+    #define functions in our problem in terms of eta,rho, and sigma
+    #eta= the radial distance, rho= the density, sigma= derivative of rho
+    def f(eta,rho,sigma):
+        
+        return sigma
+    
+    def g(eta,rho,sigma):
+        
+        return ((-2*sigma)/eta) - rho**n
     #call solveODE to solve for values of eta, rho, sigma
-    eta,rho,sigma = solveODE(x_start, x_stop, h, y0, z0,f,g)
+    eta,rho,sigma = solveODE(0.000001,x_stop,0.001,1,0,f,g)
 
     #trim the part of the arrays that's not a number
     condition = rho > 0.0
@@ -99,38 +111,16 @@ def Nonrel_WhiteDwarf(x_start, x_stop, h, y0, z0, f, g, n, k, G, rho_c, lamb):
     rho = rho[condition]
     sigma = sigma[condition]
     
-    #print the value of the edge of the star
-    print("Edge of the star is at eta = ", eta[-1])
-    #plot the variables
-    plt.plot(eta,rho, color = "blue", label = '$\\rho$')
-    plt.plot(eta, sigma, color = "orange", label = "$\sigma$")
-    plt.legend()
-    plt.xlabel('$\eta$')
-    plt.show()
+    
+   
+    
+    #write formula for lambda then convert to km
+    lamb = (((n + 1) * k * rho_c**((1-n)/n))/ (4 * np.pi * G))**(0.5) #in cm
+    lamb = lamb * 10**(-5)  #convert to km
     
     #calculate dimensionless mass
     y = rho**n * eta**2
     m = np.trapz(y,eta)
-    print("Dimensionless mass m = ", m)
-    
-
-    #write formula for lambda then convert to km
-    lamb = (((n + 1) * k * rho_c**((1-n)/n))/ (4 * np.pi * G))**(0.5) #in cm
-    lamb = lamb * 10**(-5)  #convert to km
-    print("lambda = ", lamb)
-    
-    
-    #find real density and radius of the star
-    
-    eta = eta * lamb  # convert to km using the constant lambda
-    rho = rho * rho_c 
-    print("Radius of the star = ", eta[-1], " Km")
-    
-    #plot the density vs radius with units
-    plt.plot(eta,rho, color = "pink", label = "Real eta vs. rho")
-    plt.legend()
-    plt.show()
-    
     
     #Calculate mass M
     #within the formula multiply lambda by 10^5 to convert to cm
@@ -138,8 +128,14 @@ def Nonrel_WhiteDwarf(x_start, x_stop, h, y0, z0, f, g, n, k, G, rho_c, lamb):
     #formula by 10^-3 to convert to kg
     
     M = 4 * np.pi * rho_c * (lamb * 10**(5))**3 * m * 10**(-3)
-    print("Mass of the star = ", M, " Kg")
+    
+    #find real density and radius of the star
+    eta = eta * lamb  # convert to km using the constant lambda
+    rho = rho * rho_c 
+    radius = eta[-1]
+     
+    
         
-        
-        
-    return None
+    return eta, rho, M, radius
+
+
