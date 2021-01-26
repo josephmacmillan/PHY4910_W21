@@ -102,6 +102,14 @@ eta = eta[condition]
 rho = rho[condition]
 sigma = sigma[condition]
 
+#plot the variables
+plt.plot(eta,rho, color = "blue", label = '$\\rho$')
+plt.plot(eta, sigma, color = "orange", label = "$\sigma$")
+plt.legend()
+plt.xlabel('$\eta$')
+plt.show()
+
+
 # define variables for our constants
 k_r = 2.936 * 10**(14)
 G = 6.6743 * 10**(-8)
