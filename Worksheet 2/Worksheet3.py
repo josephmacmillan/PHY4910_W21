@@ -102,6 +102,11 @@ eta = eta[condition]
 rho = rho[condition]
 sigma = sigma[condition]
 
+
+#calculate dimensionless mass
+y = rho**n * eta**2
+m = np.trapz(y,eta)
+
 #plot the variables
 plt.plot(eta,rho, color = "blue", label = '$\\rho$')
 plt.plot(eta, sigma, color = "orange", label = "$\sigma$")
@@ -116,7 +121,7 @@ G = 6.6743 * 10**(-8)
 rho_c = 53.31 * 10**(6)
 
 #write formula for lambda then convert to km
-lamb = (((n + 1) * k * rho_c**((1-n)/n))/ (4 * np.pi * G))**(0.5) #in cm
+lamb = (((n + 1) * k_r * rho_c**((1-n)/n))/ (4 * np.pi * G))**(0.5) #in cm
 lamb = lamb * 10**(-5)  #convert to km
 print("lambda = ", lamb, "km")
 
