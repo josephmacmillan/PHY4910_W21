@@ -139,3 +139,53 @@ def Nonrel_WhiteDwarf(x_stop, rho_c):
     return eta, rho, M, radius
 
 
+def rel_WhiteDwarf(x_stop, rho_c):
+    #import libraries
+    import numpy as np
+    
+    # define variables for our constants
+    n = 3
+    k_r = 2.936 * 10**(14)
+    G = 6.6743 * 10**(-8)
+    
+    def f(eta,rho,sigma):
+    
+        return sigma
+
+    def g(eta,rho,sigma):
+        
+        return ((-2*sigma)/eta) - rho**n
+    
+    #call solveODE to solve for values of eta, rho, sigma
+    eta,rho,sigma = solveODE(0.00001,x_stop,0.01,1,0,f,g)
+    
+    #trim the part of the arrays that's not a number
+    condition = rho > 0.0
+    eta = eta[condition]
+    rho = rho[condition]
+    sigma = sigma[condition]
+    
+    #calculate dimensionless mass
+    y = rho**n * eta**2
+    m = np.trapz(y,eta)
+
+    #write formula for lambda then convert to km
+    lamb = (((n + 1) * k_r * rho_c**((1-n)/n))/ (4 * np.pi * G))**(0.5) #in cm
+    lamb = lamb * 10**(-5)  #convert to km
+        
+    #find real density and radius of the star
+
+    eta = eta * lamb  # km
+    rho = rho * rho_c
+    
+    #Calculate mass M
+    #within the formula multiply lambda by 10^5 to convert to cm
+    # our final asnwer for M will be in grams, so we will multiply the entire 
+    #formula by 10^-3 to convert to kg
+    
+    M = 4 * np.pi * rho_c * (lamb * 10**(5))**3 * m * 10**(-3)
+   
+    
+    radius = eta[-1]
+    
+    return eta, rho, M, radius
