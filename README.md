@@ -16,3 +16,5 @@ In general, the job of the code maintainer, rotated weekly, is to make sure that
 ## Schedule:
 
 Week 2 - Georges - Maintain the phy4910.py file, which should at minimum contain a general function for solving ODEs using RK4.  If you want to add other convenience functions (e.g., for plotting), go for it.  Also, make sure there is working code for building a nonrelativistic white dwarf star, including calculating the mass and radius and plotting the radius versus radii.
+
+Week 4 - Ryan - Maintin the phy4910.py file, which should now contain functions for building white dwarfs as (from previous work) as well as functions for picking random directions, optical depth, and moving photons.
