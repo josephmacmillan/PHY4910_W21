@@ -189,3 +189,102 @@ def rel_WhiteDwarf(x_stop, rho_c):
     radius = eta[-1]
     
     return eta, rho, M, radius
+
+
+
+
+#bins a set data. Returns horizontal axis (min to max of data) and binned data
+def bin_data(data, nbins):
+    
+    #create an array filled with zeros with length nbins
+    bins = np.zeros(nbins)
+    
+    dmax = np.amax(data)
+    dmin = np.amin(data)
+    
+    #Sorts values from data into bins
+    #b determines bin the current number goes in and adds 1 to the bin it falls into (see lecture 3 for b equation)
+    for i in range(len(data)):
+    
+        b = int((data[i]-dmin)/(dmax + 1e-10 - dmin)*nbins)
+        bins[b] += 1
+        
+    #an array that sorts data from dmin to dmax    
+    horizontal_axis = sorted(data)
+        
+    return horizontal_axis, bins
+
+
+
+
+#returns random theta and phi values 
+rng = np.random.default_rng()
+
+def pick_direction():
+    
+    #correction for the distribution to prevent clustering at the peaks 
+    #see link: http://corysimon.github.io/articles/uniformdistn-on-sphere/
+    theta = np.arccos(1 - 2 * rng.random())
+
+    theta = np.pi*rng.random() 
+    phi = 2*np.pi*rng.random() 
+    
+    return theta, phi
+
+
+
+
+#returns random optical depth distance (tau)
+def pick_optical_depth():
+    x = rng.random()
+    tau = -np.log(1-x)
+    
+    return tau
+
+
+
+#models the path of a photon moving though an atmosphere. Returns two angles and the last scattering direction
+def move_photon(tmax, zmax):
+    x = []
+    y = []
+    z = []
+    
+    #starting at the origin
+    x.append(0)
+    y.append(0)
+    z.append(0)
+    
+    #loop until photon moves from origin to the surface
+    while True: 
+        theta, phi = pick_direction()
+        opdepth = pick_optical_depth()
+        
+        
+        #how far the photon moves in the atmophere
+        s = opdepth/tmax
+        
+        #how far the photon has moved since last time (not current position in atmosphere)
+        dx = s * np.sin(theta)*np.cos(phi)
+        dy = s * np.sin(theta)*np.sin(phi)
+        dz = s * np.cos(theta)
+    
+        #last scattering direction of the photon at the surface
+        x.append(x[-1] + dx)
+        y.append(y[-1] + dy)
+        z.append(z[-1] + dz)
+        
+        #fancy fstring stuff
+        print(f"Photon Position{x[-1]},{y[-1]},{z[-1]}")
+        
+        #if photon happens to go in the wrong direction, reset position of the photon
+        if z[-1] < 0:
+            x.clear()
+            y.clear()
+            z.clear()
+            x.append(0)
+            y.append(0)
+            z.append(0)
+        
+        #once the photon hits the surface, return the data
+        if z[-1] > zmax:
+            return x,y,z,theta,phi
