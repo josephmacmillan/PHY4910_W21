@@ -193,7 +193,7 @@ def rel_WhiteDwarf(x_stop, rho_c):
 
 
 
-#bins a set data. Returns horizontal axis (min to max of data) and binned data
+#bins a set of data. Returns horizontal axis (min to max of data) and binned data
 def bin_data(data, nbins):
     
     #create an array filled with zeros with length nbins
@@ -203,7 +203,7 @@ def bin_data(data, nbins):
     dmin = np.amin(data)
     
     #Sorts values from data into bins
-    #b determines bin the current number goes in and adds 1 to the bin it falls into (see lecture 3 for b equation)
+    #b determines which bin the current number goes in and adds 1 to the bin it falls into (see lecture 3 for b equation)
     for i in range(len(data)):
     
         b = int((data[i]-dmin)/(dmax + 1e-10 - dmin)*nbins)
