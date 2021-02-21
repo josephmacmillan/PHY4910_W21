@@ -209,8 +209,8 @@ def bin_data(data, nbins):
         b = int((data[i]-dmin)/(dmax + 1e-10 - dmin)*nbins)
         bins[b] += 1
         
-    #an array that sorts data from dmin to dmax    
-    horizontal_axis = sorted(data)
+    #an array that sorts data from dmin to dmax with length nbins    
+    horizontal_axis = np.linspace(dmin,dmax,nbins)
         
     return horizontal_axis, bins
 
