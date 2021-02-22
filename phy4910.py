@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tech of modern astro
 team Planck
@@ -9,10 +8,10 @@ Author: Georges Karagozian
 
 import numpy as np
 
-
+#Solves ODE in terms of x (eta), y (rho), and z (sigma) values
 def solveODE(x_start, x_stop, h, y0, z0, f, g, Type = "rk"):
    
-    
+    print(f"ODE Solver is Running at {h} increments.")
     #initialize the arrays for each variable
     x = np.arange(x_start,x_stop,h)
     N = len(x)
@@ -62,7 +61,7 @@ def solveODE(x_start, x_stop, h, y0, z0, f, g, Type = "rk"):
     return x,y,z    
         
         
-        
+#plots        
 def plot(x,y, xlabel, ylabel, name = " "):
     import matplotlib.pyplot as plt
     
@@ -84,7 +83,7 @@ def plot(x,y, xlabel, ylabel, name = " "):
         
  
 
-
+#Behavior or non-relativistic white dwarf star
 def Nonrel_WhiteDwarf(x_stop, rho_c):
     #import libraries
     import numpy as np
@@ -114,7 +113,7 @@ def Nonrel_WhiteDwarf(x_stop, rho_c):
     
    
     
-    #write formula for lambda then convert to km
+    #Solving lambda, convert SI units
     lamb = (((n + 1) * k * rho_c**((1-n)/n))/ (4 * np.pi * G))**(0.5) #in cm
     lamb = lamb * 10**(-5)  #convert to km
     
@@ -122,19 +121,16 @@ def Nonrel_WhiteDwarf(x_stop, rho_c):
     y = rho**n * eta**2
     m = np.trapz(y,eta)
     
-    #Calculate mass M
-    #within the formula multiply lambda by 10^5 to convert to cm
-    # our final asnwer for M will be in grams, so we will multiply the entire 
-    #formula by 10^-3 to convert to kg
-    
+    #Calculate mass M, and convert to SI units (kg)
     M = 4 * np.pi * rho_c * (lamb * 10**(5))**3 * m * 10**(-3)
+      
     
     #find real density and radius of the star
     eta = eta * lamb  # convert to km using the constant lambda
     rho = rho * rho_c 
     radius = eta[-1]
      
-    
+    print(f"White Dwarf Mass: {M}, Radius: {radius}, Density: {rho[0]}")
         
     return eta, rho, M, radius
 
@@ -187,13 +183,13 @@ def rel_WhiteDwarf(x_stop, rho_c):
    
     
     radius = eta[-1]
-    
+    print(f"White Dwarf Mass: {M}, Radius: {radius}, Density: {rho[0]}")
     return eta, rho, M, radius
 
 
 
 
-#bins a set of data. Returns horizontal axis (min to max of data) and binned data
+#bin a set of data Return horizontal axis (min to max of data) and binned data
 def bin_data(data, nbins):
     
     #create an array filled with zeros with length nbins
@@ -211,13 +207,14 @@ def bin_data(data, nbins):
         
     #an array that sorts data from dmin to dmax with length nbins    
     horizontal_axis = np.linspace(dmin,dmax,nbins)
+    print(f"The min/max data is {horizontal_axis}")
         
     return horizontal_axis, bins
 
 
 
 
-#returns random theta and phi values 
+#return random theta and phi values 
 rng = np.random.default_rng()
 
 def pick_direction():
@@ -229,18 +226,19 @@ def pick_direction():
     theta = np.pi*rng.random() 
     phi = 2*np.pi*rng.random() 
     
+    print(f"your random numbers are; {theta}, and {phi}")
     return theta, phi
 
 
 
 
-#returns random optical depth distance (tau)
+#return random optical depth distance (tau)
 def pick_optical_depth():
     x = rng.random()
     tau = -np.log(1-x)
     
     return tau
-
+    print(f"Random optical depth distance is {tau}")
 
 
 #models the path of a photon moving though an atmosphere. Returns two angles and the last scattering direction
@@ -273,7 +271,7 @@ def move_photon(tmax, zmax):
         y.append(y[-1] + dy)
         z.append(z[-1] + dz)
         
-        #fancy fstring stuff
+        #Tell user the information
         print(f"Photon Position{x[-1]},{y[-1]},{z[-1]}")
         
         #if photon happens to go in the wrong direction, reset position of the photon
@@ -288,3 +286,19 @@ def move_photon(tmax, zmax):
         #once the photon hits the surface, return the data
         if z[-1] > zmax:
             return x,y,z,theta,phi
+
+#Main function (start point of program --- dummy variables for now)
+def main():
+    Nonrel_WhiteDwarf(1, 2)
+    rel_WhiteDwarf(2, 1)
+    plot(1,1, xlabel, ylabel)
+    bin_data(0, 0)
+    pick_direction()
+    pick_optical_depth()       
+    move_photon(2, 1)
+    
+if __name__ == "__main__":
+    main()
+    
+
+    
