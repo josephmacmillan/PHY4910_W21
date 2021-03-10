@@ -24,3 +24,5 @@ Week 5 - Alexis - Maintain the phy4910.py file.  At this point it's complete in 
 * Some print statements, using f strings, in places that are appropriate (e.g., where you want to give the user some information)
 * A main function that only runs when the code is run directly; do some basic testing in the main function.
 * Adapt solveODE to include a stopping function as we discussed in class (see Worksheet 6 and code for it here).
+
+Week 7 - Sourav - Maintain code for Worksheets 8 and 9.  I recommend two files (worksheet8.py and worksheet9.py) that do all the things asked in the worksheets.  Make sure the code is well documented (doc strings, comments).
