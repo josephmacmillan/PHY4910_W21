@@ -1,6 +1,4 @@
 from math import sqrt
-from struct import unpack, pack
-from array import array
 
 class Particle:
 
