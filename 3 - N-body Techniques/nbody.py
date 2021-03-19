@@ -75,6 +75,46 @@ class System:
 			ret += str(self.particles[i]) + '\n'
 		return ret
 
+	def write(self, filename):
+		f = open(filename, 'w')
+		print(f"Writing to file {filename} ({self.N} particles at time {self.time})")
+		f.write(str(self))
+		f.close()
+
+	@classmethod
+	def read(cls, filename):
+		f = open(filename, 'r')
+		N = int(f.readline())
+		t = float(f.readline())
+		G = float(f.readline())
+		print(f"Reading from file {filename} ({N} particles at time {t}")
+		parts = []
+		for i in range(N):
+			parts.append(Particle.from_string(f.readline()))
+		f.close()
+		return cls(parts, t, G)    
+
+	def all_x(self):
+		x = []
+		for i in range(self.N):
+			x.append(self.particles[i].x())
+
+		return x
+
+	def all_y(self):
+		y = []
+		for i in range(self.N):
+			y.append(self.particles[i].y())
+
+		return y    
+
+	def all_z(self):
+		z = []
+		for i in range(self.N):
+			z.append(self.particles[i].z())
+
+		return z
+
 	def calc_accels(self):
 	
 		for i in range(self.N):
@@ -108,8 +148,12 @@ class System:
 
 if __name__ == "__main__": 
 
-	p1 = Particle(1.0, [2, 3, 4], [5, 6, 7])
-	p2 = Particle.from_string("8 9 10 11 12 13 14")
+	#p1 = Particle(1.0, [2, 3, 4], [5, 6, 7])
+	#p2 = Particle.from_string("8 9 10 11 12 13 14")
 
-	s = System([p1, p2], t = 1231245)
+	#s = System([p1, p2], t = 1231245)
+	#print(s)
+	#s.write("test.dat")
+	
+	s = System.read("test.dat")
 	print(s)
