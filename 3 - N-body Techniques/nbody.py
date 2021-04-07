@@ -1,12 +1,13 @@
 from math import sqrt
+from struct import unpack, pack
 
 class Particle:
 
-	def __init__(self, mass, pos, vel):
+	def __init__(self, mass, pos, vel, ID = 0):
 		self.mass = mass
 		self.position = pos
 		self.velocity = vel
-
+		self.ID = ID
 		self.accel = [0.0, 0.0, 0.0]
 
 	def x(self):
@@ -78,6 +79,31 @@ class System:
 		print(f"Writing to file {filename} ({self.N} particles at time {self.time})")
 		f.write(str(self))
 		f.close()
+		
+	def write_binary(self, filename):
+		with open(filename, "wb") as f:
+			Nb = pack('<i', self.N)
+			tb = pack('<d', self.time)
+			f.write(Nb)
+			f.write(tb)
+			
+			for p in self.particles:
+				m = pack('<f', p.mass)
+				x = pack('<f', p.position[0])
+				y = pack('<f', p.position[1])
+				z = pack('<f', p.position[2])
+				vx = pack('<f', p.velocity[0])
+				vy = pack('<f', p.velocity[1])
+				vz = pack('<f', p.velocity[2])
+				ID = pack('<i', p.ID)
+				f.write(m)
+				f.write(x)
+				f.write(y)
+				f.write(z)
+				f.write(vx)
+				f.write(vy)
+				f.write(vz)
+				f.write(ID)
 
 	@classmethod
 	def read(cls, filename):
@@ -90,7 +116,28 @@ class System:
 		for i in range(N):
 			parts.append(Particle.from_string(f.readline()))
 		f.close()
-		return cls(parts, t, G)    
+		return cls(parts, t, G) 
+		
+	@classmethod
+	def read_binary(cls, filename):
+		with open(filename, "rb") as f:
+			N = unpack('<i', f.read(4))[0]
+			t = unpack('<d', f.read(8))[0]
+			
+			parts = []
+			for i in range(N):
+				m = unpack('<f', f.read(4))[0]
+				x = unpack('<f', f.read(4))[0]
+				y = unpack('<f', f.read(4))[0]
+				z = unpack('<f', f.read(4))[0]
+				vx = unpack('<f', f.read(4))[0]
+				vy = unpack('<f', f.read(4))[0]
+				vz = unpack('<f', f.read(4))[0]
+				ID = unpack('<i', f.read(4))[0]
+				
+				parts.append(Particle(m, [x, y, z], [vx, vy, vz], ID))
+				
+		return cls(parts, t = t)
 
 	def all_x(self):
 		x = []
@@ -146,12 +193,13 @@ class System:
 
 if __name__ == "__main__": 
 
-	#p1 = Particle(1.0, [2, 3, 4], [5, 6, 7])
-	#p2 = Particle.from_string("8 9 10 11 12 13 14")
+	p1 = Particle(1.0, [2, 3, 4], [5, 6, 7], ID = 3)
+	p2 = Particle.from_string("8 9 10 11 12 13 14")
 
-	#s = System([p1, p2], t = 1231245)
-	#print(s)
-	#s.write("test.dat")
-	
-	s = System.read("test.dat")
+	s = System([p1, p2], t = 1.231245)
 	print(s)
+	s.write("test.dat")
+	
+	#s = System.read("test.dat")
+	#print(s)
+	#print(s.particles[0].ID)
